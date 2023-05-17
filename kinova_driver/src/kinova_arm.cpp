@@ -202,6 +202,8 @@ KinovaArm::KinovaArm(KinovaComm &arm, const ros::NodeHandle &nodeHandle, const s
             ("out/tool_wrench", 2);
     finger_position_publisher_ = node_handle_.advertise<kinova_msgs::FingerPosition>
             ("out/finger_position", 2);
+    joystick_publisher_ = node_handle_.advertise<geometry_msgs::Vector3>
+            ("out/joystick_command", 2);
 
     // Publish last command for relative motion (read current position cause arm drop)
     joint_command_publisher_ = node_handle_.advertise<kinova_msgs::JointAngles>("out/joint_command", 2);
@@ -756,12 +758,27 @@ void KinovaArm::publishFingerPosition(void)
     finger_position_publisher_.publish(fingers.constructFingersMsg());
 }
 
+/*!
+ * \brief Publishes current joystick values
+*/
+void KinovaArm::publishJoystickValue(void)
+{
+    JoystickCommand joystick_command;
+    kinova_comm_.getJoystickValue(joystick_command);
+    geometry_msgs::Vector3 msg;
+    msg.x = joystick_command.InclineLeftRight;
+    msg.y = joystick_command.InclineForwardBackward;
+    msg.z = joystick_command.Rotate;
+    joystick_publisher_.publish(msg);
+}
+
 void KinovaArm::statusTimer(const ros::TimerEvent&)
 {
     publishJointAngles();
     publishToolPosition();
     publishToolWrench();
     publishFingerPosition();
+    publishJoystickValue();
 }
 
 }  // namespace kinova

@@ -1700,6 +1700,21 @@ int KinovaComm::SetRedundantJointNullSpaceMotion(int state)
     return 1;
 }
 
+/**
+ * @brief This function gets joystick values from the robotical arm.
+ * @param joystick_command The structure that contains the joystick values.
+ */
+void KinovaComm::getJoystickValue(JoystickCommand &joystick_command)
+{
+    boost::recursive_mutex::scoped_lock lock(api_mutex_);
+    memset(&joystick_command, 0, sizeof(joystick_command));  // zero structure
+    int result = kinova_api_.getJoystickValue(joystick_command);
+    if (result != NO_ERROR_KINOVA)
+    {
+        throw KinovaCommException("Could not get joystick value", result);
+    }
+}
+
 int KinovaComm::SetRedundancyResolutionToleastSquares(int state)
 {
     //Not Available in API
