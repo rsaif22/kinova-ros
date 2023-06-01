@@ -19,16 +19,213 @@
 
   <xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro"/>
 
-  <link name="root"/>
+  <xacro:property name="circle1_radius" value="0.85"/>
+  <xacro:property name="circle2_radius" value="0.575"/>
+  <xacro:property name="circle3_radius" value="0.3"/>
+  <xacro:property name="height" value="0.001"/>
+  <xacro:property name="line_width" value="0.01"/>
+  <xacro:property name="pi" value="3.14159265359"/>
+
+  
 
   <!-- for gazebo -->
   <link name="world"/>
-  
+  <link name="root"/>
+
+
   <joint name="connect_root_and_world" type="fixed">
     <child link="root" />
     <parent link="world" />
     <origin xyz="0 0 0" rpy="0 0 0" />    
   </joint> 
+
+  <!-- Define material properties -->
+  <material name="red">
+    <color rgba="1 0 0 1"/>
+  </material>
+  <material name="green">
+    <color rgba="0 1 0 1"/>
+  </material>
+  <material name="blue">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0 0 0 1"/> <!-- Set the color values (R, G, B, A) -->
+  </material>
+  
+  <!-- Circle 1 -->
+  <link name="circle1_link">
+    <visual>
+      <geometry>
+        <cylinder length="${height}" radius="${circle1_radius}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0" radius="0"/>
+      </geometry>
+    </collision>
+    <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
+  </inertial>
+  </link>
+
+
+  <!-- Circle 2 -->
+  <link name="circle2_link">
+    <visual>
+      <geometry>
+        <cylinder length="${height}" radius="${circle2_radius}"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+      <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
+  </inertial>
+  </link>
+
+
+
+  <!-- Circle 3 -->
+  <link name="circle3_link">
+    <visual>
+      <geometry>
+        <cylinder length="${height}" radius="${circle3_radius}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+      <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
+  </inertial>
+  </link>
+
+  <!-- Line 1-->
+  <link name="line1_link">
+    <visual>
+      <origin rpy="0.0 ${pi/2} 0.0"/>
+      <geometry>
+        <cylinder length="${2*circle1_radius}" radius="${line_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+      <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
+  </inertial>
+  </link>
+
+  <!-- Line 2-->
+  <link name="line2_link">
+    <visual>
+      <origin rpy="0.0 ${pi/2} ${pi/3}"/>
+      <geometry>
+        <cylinder length="${2*circle1_radius}" radius="${line_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+      <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
+  </inertial>
+  </link>
+
+  <!-- Line 3-->
+  <link name="line3_link">
+    <visual>
+    <origin rpy="0.0 ${pi/2} ${-pi/3}"/>
+      <geometry>
+        <cylinder length="${2*circle1_radius}" radius="${line_width}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+      <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
+  </inertial>
+  </link>
+
+
+
+  <joint name="connect_circle_and_world" type="fixed">
+    <child link="circle1_link" />
+    <parent link="root" />
+    <origin xyz="0 0 ${height/2}" rpy="0 0 0" />    
+  </joint> 
+
+  <joint name="circle1_joint" type="fixed">
+    <origin xyz="0 0 ${height/2}"/>
+    <parent link="circle1_link"/>
+    <child link="circle2_link"/>
+  </joint>
+
+  <joint name="circle2_joint" type="fixed">
+    <origin xyz="0 0 ${height/2}"/>
+    <parent link="circle2_link"/>
+    <child link="circle3_link"/>
+  </joint>
+
+  <joint name="line1_joint" type="fixed">
+    <origin xyz="0 0 ${height/2}"/>
+    <parent link="circle3_link"/>
+    <child link="line1_link"/>
+  </joint>
+
+  <joint name="line2_joint" type="fixed">
+    <origin xyz="0 0 ${height/2}"/>
+    <parent link="circle3_link"/>
+    <child link="line2_link"/>
+  </joint>
+
+  <joint name="line3_joint" type="fixed"> 
+    <origin xyz="0 0 ${height/2}"/>
+    <parent link="circle3_link"/>
+    <child link="line3_link"/>
+  </joint>
+
+
+
+
+
+  <gazebo reference="circle1_link"> 
+    <material>Gazebo/Red</material> 
+  </gazebo> 
+
+  <gazebo reference="circle2_link"> 
+    <material>Gazebo/Blue</material> 
+  </gazebo> 
+
+    <gazebo reference="circle3_link"> 
+    <material>Gazebo/White</material> 
+  </gazebo> 
+
+  <gazebo reference="line1_link"> 
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="line2_link"> 
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="line3_link"> 
+    <material>Gazebo/Black</material>
+  </gazebo>
 
   <xacro:property name="robot_root" value="root" />
 
