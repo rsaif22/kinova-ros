@@ -113,7 +113,7 @@
   <!-- Line 1-->
   <link name="line1_link">
     <visual>
-      <origin rpy="0.0 ${pi/2} 0.0"/>
+      <origin rpy="0.0 ${pi/2} ${pi/6}"/>
       <geometry>
         <cylinder length="${2*circle1_radius}" radius="${line_width}"/>
       </geometry>
@@ -130,7 +130,7 @@
   <!-- Line 2-->
   <link name="line2_link">
     <visual>
-      <origin rpy="0.0 ${pi/2} ${pi/3}"/>
+      <origin rpy="0.0 ${pi/2} ${pi/2}"/>
       <geometry>
         <cylinder length="${2*circle1_radius}" radius="${line_width}"/>
       </geometry>
@@ -147,7 +147,7 @@
   <!-- Line 3-->
   <link name="line3_link">
     <visual>
-    <origin rpy="0.0 ${pi/2} ${-pi/3}"/>
+    <origin rpy="0.0 ${pi/2} ${-pi/6}"/>
       <geometry>
         <cylinder length="${2*circle1_radius}" radius="${line_width}"/>
       </geometry>
