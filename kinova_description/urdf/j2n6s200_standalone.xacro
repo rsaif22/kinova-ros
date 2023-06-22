@@ -32,6 +32,28 @@
 
   <xacro:property name="robot_root" value="root" />
 
+          <link name="ee1_link">
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.5"/>
+                <geometry>
+                    <cylinder radius="0.2" length="0.5"/>
+                </geometry>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="0.2" length="0.5"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="ee1_joint" type="revolute">
+            <parent link="${prefix}_link_6"/>
+            <child link="ee1_link"/>
+            <axis xyz="0 0 1"/>  
+            <limit effort="0" lower="-3.14" upper="3.14" velocity="0.6283185307179586"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+
+        </joint>
+
   <xacro:j2n6s200  base_parent="${robot_root}"/>
 
 </robot>

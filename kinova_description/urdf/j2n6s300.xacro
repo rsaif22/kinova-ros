@@ -148,9 +148,188 @@
 
         <xacro:kinova_virtual_link link_name="${prefix}_end_effector"/>
         <xacro:kinova_virtual_joint joint_name="${prefix}_joint_end_effector" type="${joint_end_effector_type}" parent="${prefix}_link_6" child="${prefix}_end_effector" joint_axis_xyz="${joint_end_effector_axis_xyz}" joint_origin_xyz="${joint_end_effector_origin_xyz}" joint_origin_rpy="${joint_end_effector_origin_rpy}" joint_lower_limit="0" joint_upper_limit="0"/>
-
     <xacro:kinova_3fingers link_hand="${prefix}_link_6" prefix="${prefix}_"/>
     </xacro:macro>
+
+  <xacro:property name="ee0_length" value="0.2"/>
+  <xacro:property name="ee_radius" value="0.01"/>
+  <xacro:property name="ee0_mass" value="0.1"/>
+
+  <link name="j2n6s300_ee0_link">
+    <visual>
+    <origin xyz="0 0.0 0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.01"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+        <origin xyz="0 0.0 0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <cylinder length="0.2" radius="0.01"/>
+        </geometry>
+    </collision>
+    <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <mass value="0.001" />
+    <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+  </inertial>
+  </link>
+
+
+    <joint name="j2n6s300_ee0_joint" type="fixed">
+      <parent link="j2n6s300_link_6"/>
+      <child link="j2n6s300_ee0_link"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.146"/>
+    </joint>
+
+
+<!-- End effector link 1-->
+  <link name="j2n6s300_ee1_link">
+    <visual>
+    <origin xyz="0.0 0 0.05" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.01"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+    <origin xyz="0 0 0.05" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.01"/>
+      </geometry>
+    </collision>
+      <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+    <origin rpy="0 0 0" xyz="0 0 0.05" />
+    <mass value="0.1" />
+    <inertia ixx="8.33e-05" iyy="2.5e-07" izz="2.5e-07" ixy="0" ixz="0" iyz="0"/>
+  </inertial>
+  </link>
+
+
+  <joint name="j2n6s300_ee1_joint" type="revolute">
+    <origin rpy="0 1.57 0" xyz="-0.01 0.01 -0.09"/>
+    <parent link="j2n6s300_ee0_link"/>
+    <child link="j2n6s300_ee1_link"/>
+    
+    <axis xyz="0 1 0"/>
+    <limit effort="10" velocity="1" lower="${-2*J_PI}" upper="${2*J_PI}"/>
+      <damping value="100"/>
+      <dynamics damping="1e-02"/>
+  </joint>
+  
+  <transmission name="j2n6s300_ee1_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="j2n6s300_ee1_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="j2n6s300_ee1_actuator">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+    <!-- <joint name="ee1_joint" type="fixed">
+      <origin rpy="0 1.57 0" xyz="0.0 0 -0.100"/>
+      <parent link="ee0_link"/>
+      <child link="ee1_link"/>
+    </joint> -->
+
+<!-- End effector link 2-->
+  <link name="j2n6s300_ee2_link">
+    <visual>
+    <origin xyz="0.0 0 0.05" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.01"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+    <origin xyz="0.0 0 0.05" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+      <origin rpy="0 0 0" xyz="0.0 0 0.05" />
+      <mass value="0.1" />
+      <inertia ixx="8.33e-05" iyy="2.5e-07" izz="2.5e-07" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+
+
+    <joint name="j2n6s300_ee2_joint" type="revolute">
+      <origin rpy="0 0.0 0" xyz="0.0 0 0.1"/>
+      <parent link="j2n6s300_ee1_link"/>
+      <child link="j2n6s300_ee2_link"/>
+      
+      <axis xyz="1 0 0"/>
+      <limit effort="10" velocity="1" lower="${-2*J_PI}" upper="${2*J_PI}"/>
+      <!-- <damping value="100"/> -->
+      <dynamics damping="1e-02"/>
+    </joint>
+
+  <transmission name="j2n6s300_ee2_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="j2n6s300_ee2_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="j2n6s300_ee2_actuator">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="j2n6s300_mass_link">
+    <visual>
+    <!--Make a sphere of radius 0.02 mass 1-->
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+    <!-- Define inertial properties with minimal or placeholder values -->
+      <origin rpy="0 0 0" xyz="0.0 0 0.05" />
+      <mass value="1" />
+      <inertia ixx="6.67e-05" iyy="6.67e-05" izz="6.67e-05" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="j2n6s300_mass_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0 0.1"/>
+    <parent link="j2n6s300_ee2_link"/>
+    <child link="j2n6s300_mass_link"/>
+  </joint>
+
+
+
+
+
+    <!-- <joint name="ee2_joint" type="fixed">
+      <origin rpy="0 1.57 0" xyz="0.0 0 0.1"/>
+      <parent link="ee1_link"/>
+      <child link="ee2_link"/>
+    </joint> -->
+
+  <gazebo reference="j2n6s300_ee1_link"> 
+    <material>Gazebo/Black</material> 
+  </gazebo> 
+
+  <gazebo reference="j2n6s300_mass_link"> 
+    <material>Gazebo/Black</material> 
+  </gazebo> 
+
+    
 
 
 </root>

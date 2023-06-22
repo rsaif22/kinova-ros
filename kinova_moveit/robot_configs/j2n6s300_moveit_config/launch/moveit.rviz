@@ -52,7 +52,7 @@ Visualization Manager:
       MoveIt_Allow_Replanning: false
       MoveIt_Allow_Sensor_Positioning: false
       MoveIt_Planning_Attempts: 100
-      MoveIt_Planning_Time: 10
+      MoveIt_Planning_Time: 2
       MoveIt_Use_Cartesian_Path: false
       MoveIt_Use_Constraint_Aware_IK: true
       MoveIt_Workspace:
@@ -85,6 +85,16 @@ Visualization Manager:
             Show Trail: false
             Value: true
           circle3_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          ee0_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          ee1_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -242,6 +252,16 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          ee0_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          ee1_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           j2n6s300_end_effector:
             Alpha: 1
             Show Axes: false
@@ -364,7 +384,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 1.1473455429077148
+      Distance: 2.6040096282958984
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -372,17 +392,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.33088237047195435
-        Y: -0.2529584467411041
-        Z: 2.2351798634190345e-07
+        X: -0.12037968635559082
+        Y: -0.567564845085144
+        Z: 3.427272758926847e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.2447961568832397
+      Pitch: 1.0047962665557861
       Target Frame: root
-      Yaw: 2.25677490234375
+      Yaw: 4.891786575317383
     Saved: ~
 Window Geometry:
   Displays:
