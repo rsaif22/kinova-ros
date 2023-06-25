@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="passive_ees">
-
+    <xacro:property name="pi" value="3.14159265359"/>
   <!-- Define the macro to generate a cuboid link -->
-  <xacro:macro name="passive_ee_link" params="parent name length width height mass color xyz rpy joint_type joint_revolute_axis">
+  <xacro:macro name="passive_ee_link" params="parent name length width height mass color xyz rpy joint_xyz joint_rpy joint_type joint_revolute_axis">
     <link name="${name}_link">
       <visual>
         <origin xyz="${xyz}" rpy="${rpy}" />
@@ -24,30 +24,33 @@
         <mass value="${mass}" />
         <origin xyz="${xyz}" rpy="${rpy}" />
         <inertia 
-          ixx="${0.0833 * mass * (width * width + height * height)}" 
+          ixx="${(1.0/12.0) * mass * (width * width + height * height)}" 
           ixy="0.0" 
           ixz="0.0" 
-          iyy="${0.0833 * mass * (length * length + height * height)}" 
+          iyy="${(1.0/12.0) * mass * (length * length + height * height)}" 
           iyz="0.0" 
-          izz="${0.0833 * mass * (length * length + width * width)}" />
+          izz="${(1.0/12.0) * mass * (length * length + width * width)}" />
       </inertial>
+      
     </link>
-    <joint name="${name}_joint" type="fixed">
+    <joint name="${name}_joint" type="${joint_type}">
         <parent link="${parent}" />
         <child link="${name}_link" />
-        <origin xyz="${xyz}" rpy="${rpy}" />
+        <origin xyz="${joint_xyz}" rpy="${joint_rpy}" />
         <xacro:if value="${joint_type == 'revolute'}">
             <axis xyz="${joint_revolute_axis}" />
+            <limit effort="100" velocity="5" lower="${-2*pi}" upper="${2*pi}"/>
+            <dynamics damping="1e-02"/>
         </xacro:if>
     </joint>
     <!--Define transmission if revolute (needed for TF to be published)-->
     <xacro:if value="${joint_type == 'revolute'}">
         <transmission name="${name}_joint_transmission">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="{name}_joint">
+            <joint name="${name}_joint">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
-            <actuator name="{name}_joint_actuator">
+            <actuator name="${name}_joint_actuator">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
@@ -55,17 +58,70 @@
     </xacro:if>
   </xacro:macro>
 
+<!-- Define the macro to generate a cylinder link -->
+  <xacro:macro name="passive_ee_mass" params="parent name radius height mass color xyz joint_xyz">
+    <link name="${name}_link">
+      <visual>
+        <geometry>
+          <cylinder radius="${radius}" length="${height}" />
+        </geometry>
+        <material name="${name}_material">
+          <color rgba="${color}" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${radius}" length="${height}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${mass}" />
+        <origin xyz="${xyz}" rpy="0 0 0" />
+        <inertia 
+          ixx="${(1.0/12.0) * mass * (3 * radius * radius + height * height)}" 
+          ixy="0.0" 
+          ixz="0.0" 
+          iyy="${(1.0/12.0) * mass * (3 * radius * radius + height * height)}" 
+          iyz="0.0" 
+          izz="${(1.0/2.0) * mass * radius * radius}" />
+      </inertial>
+    </link>
+    <joint name="fixed_joint_${name}" type="fixed">
+      <parent link="${parent}" />
+      <child link="${name}_link" />
+      <origin xyz="${joint_xyz}" rpy="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+
   <!-- Define the properties for each cuboid link -->
+
+  <!-- Define passive_ee_0-->
+    <xacro:property name="passive_ee_0_name" value="passive_ee_0" />
+    <xacro:property name="passive_ee_0_length" value="0.02" />
+    <xacro:property name="passive_ee_0_width" value="0.02" />
+    <xacro:property name="passive_ee_0_height" value="0.2" />
+    <xacro:property name="passive_ee_0_mass" value="0.2" />
+    <xacro:property name="passive_ee_0_color" value="0.0 0.0 1.0 1.0" />
+    <xacro:property name="passive_ee_0_xyz" value="0.0 0.0 ${-passive_ee_0_height/2}" />
+    <xacro:property name="passive_ee_0_rpy" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_0_joint_xyz" value="0.0 0.0 -0.12" /> <!-- 0.12 is the distance between link 6 frame and top of palm -->
+    <xacro:property name="passive_ee_0_joint_rpy" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_0_joint_type" value="fixed" />
+    <xacro:property name="passive_ee_0_joint_revolute_axis" value="0.0 0.0 0.0" />
+
   <xacro:property name="passive_ee_1_name" value="passive_ee_1" />
   <xacro:property name="passive_ee_1_length" value="0.02" />
   <xacro:property name="passive_ee_1_width" value="0.02" />
-  <xacro:property name="passive_ee_1_height" value="0.1" />
-  <xacro:property name="passive_ee_1_mass" value="1.0" />
+  <xacro:property name="passive_ee_1_height" value="0.10" />
+  <xacro:property name="passive_ee_1_mass" value="0.10" />
   <xacro:property name="passive_ee_1_color" value="0.0 1.0 0.0 1.0" />
-  <xacro:property name="passive_ee_1_xyz" value="0.0 0.0 0.0" />
+  <xacro:property name="passive_ee_1_xyz" value="0.0 0.0 ${-passive_ee_1_height/2}" />
     <xacro:property name="passive_ee_1_rpy" value="0.0 0.0 0.0" />
-    <xacro:property name="passive_ee_1_joint_type" value="fixed" />
-    <xacro:property name="passive_ee_1_joint_revolute_axis" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_1_joint_xyz" value="${passive_ee_1_width} 0.0 ${-passive_ee_0_height+passive_ee_1_width/2}" />
+    <xacro:property name="passive_ee_1_joint_rpy" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_1_joint_type" value="revolute" />
+    <xacro:property name="passive_ee_1_joint_revolute_axis" value="1.0 0.0 0.0" />
 
   <!-- Gazebo material reference for passive_ee_1 -->
   <xacro:property name="passive_ee_1_gazebo_material" value="Gazebo/Green" />
@@ -73,13 +129,23 @@
   <xacro:property name="passive_ee_2_name" value="passive_ee_2" />
   <xacro:property name="passive_ee_2_length" value="0.02" />
   <xacro:property name="passive_ee_2_width" value="0.02" />
-  <xacro:property name="passive_ee_2_height" value="0.1" />
-  <xacro:property name="passive_ee_2_mass" value="0.5" />
+  <xacro:property name="passive_ee_2_height" value="0.10" />
+  <xacro:property name="passive_ee_2_mass" value="0.10" />
   <xacro:property name="passive_ee_2_color" value="1.0 0.0 0.0 1.0" />
-  <xacro:property name="passive_ee_2_xyz" value="1.0 0.0 0.0" />
+  <xacro:property name="passive_ee_2_xyz" value="0.0 0.0 ${-passive_ee_2_height/2}" />
     <xacro:property name="passive_ee_2_rpy" value="0.0 0.0 0.0" />
-    <xacro:property name="passive_ee_2_joint_type" value="fixed" />
-    <xacro:property name="passive_ee_2_joint_revolute_axis" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_2_joint_xyz" value="0.0 ${passive_ee_2_width} ${-passive_ee_1_height+passive_ee_2_width/2}" />
+    <xacro:property name="passive_ee_2_joint_rpy" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_2_joint_type" value="revolute" />
+    <xacro:property name="passive_ee_2_joint_revolute_axis" value="0.0 1.0 0.0" />
+
+    <xacro:property name="passive_ee_mass_name" value="passive_ee_mass" />
+    <xacro:property name="passive_ee_mass_radius" value = "0.03" />
+    <xacro:property name="passive_ee_mass_height" value = "0.03" />
+    <xacro:property name="passive_ee_mass_mass" value = "1.0" />
+    <xacro:property name="passive_ee_mass_color" value = "0.0 0.0 0.0 1.0" />
+    <xacro:property name="passive_ee_mass_xyz" value="0.0 0.0 0.0" />
+    <xacro:property name="passive_ee_mass_joint_xyz" value="0.0 0.0 ${-passive_ee_2_height-passive_ee_mass_height/2}" />
 
 
 
@@ -89,8 +155,24 @@
 
     <xacro:macro name="passive_ee" params="base_parent">
     <!-- Generate cuboid links using the defined properties -->
+
     <xacro:passive_ee_link 
         parent="${base_parent}"
+        name="${passive_ee_0_name}"
+        length="${passive_ee_0_length}"
+        width="${passive_ee_0_width}"
+        height="${passive_ee_0_height}"
+        mass="${passive_ee_0_mass}"
+        color="${passive_ee_0_color}"
+        xyz="${passive_ee_0_xyz}"
+        rpy="${passive_ee_0_rpy}"
+        joint_xyz="${passive_ee_0_joint_xyz}"
+        joint_rpy="${passive_ee_0_joint_rpy}"
+        joint_type="${passive_ee_0_joint_type}"
+        joint_revolute_axis="${passive_ee_0_joint_revolute_axis}"
+    />
+    <xacro:passive_ee_link 
+        parent="${passive_ee_0_name}_link"
         name="${passive_ee_1_name}"
         length="${passive_ee_1_length}"
         width="${passive_ee_1_width}"
@@ -99,6 +181,8 @@
         color="${passive_ee_1_color}"
         xyz="${passive_ee_1_xyz}"
         rpy="${passive_ee_1_rpy}"
+        joint_xyz="${passive_ee_1_joint_xyz}"
+        joint_rpy="${passive_ee_1_joint_rpy}"
         joint_type="${passive_ee_1_joint_type}"
         joint_revolute_axis="${passive_ee_1_joint_revolute_axis}"
     />
@@ -113,9 +197,22 @@
         color="${passive_ee_2_color}"
         xyz="${passive_ee_2_xyz}"
         rpy="${passive_ee_2_rpy}"
+        joint_xyz="${passive_ee_2_joint_xyz}"
+        joint_rpy="${passive_ee_2_joint_rpy}"
         joint_type="${passive_ee_2_joint_type}"
         joint_revolute_axis="${passive_ee_2_joint_revolute_axis}"
 
+    />
+
+    <xacro:passive_ee_mass
+        parent="${passive_ee_2_name}_link"
+        name="${passive_ee_mass_name}"
+        radius="${passive_ee_mass_radius}"
+        height="${passive_ee_mass_height}"
+        mass="${passive_ee_mass_mass}"
+        color="${passive_ee_mass_color}"
+        xyz="${passive_ee_mass_xyz}"
+        joint_xyz="${passive_ee_mass_joint_xyz}"
     />
     </xacro:macro>
 
@@ -127,6 +224,27 @@
     <material name="${passive_ee_2_gazebo_material}">
       <color>${passive_ee_2_color}</color>
     </material>
+  </gazebo>
+
+  <gazebo reference="passive_ee_1_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>/passive_ee_1_imu</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>/passive_ee_1_imu</topicName>
+        <bodyName>passive_ee1_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 ${-passive_ee_1_height/2}</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>passive_ee_1_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
   </gazebo>
 
 </robot>

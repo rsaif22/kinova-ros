@@ -18,7 +18,7 @@
 
 
   <xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro"/>
-  <xacro:include filename="$(find kinova_description)/urdf/passive_ee.xacro" />
+  
 
   <xacro:property name="circle1_radius" value="0.85"/>
   <xacro:property name="circle2_radius" value="0.575"/>
@@ -45,7 +45,8 @@
 
 
   <xacro:j2n6s300  base_parent="${robot_root}"/>
-  <xacro:passive_ee base_parent="${robot_root}" />
+
+  <xacro:passive_ee base_parent="j2n6s300_link_6"/>
 
 
 </robot>
