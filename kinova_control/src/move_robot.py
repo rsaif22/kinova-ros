@@ -7,6 +7,7 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 from std_srvs.srv import Empty
 import argparse
 import time
+import numpy as np
 
 def argumentParser(argument):
   """ Argument parser """
@@ -75,9 +76,10 @@ if __name__ == '__main__':
     unpause_gazebo = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
     resp = unpause_gazebo()
 
+
     if (nbJoints==6):
       #home robots
-      moveJoint ([0.0,2.9,0.0,4.2,1.4,0.0],prefix,nbJoints)
+      moveJoint ([np.pi/6,np.pi,np.pi/2,np.pi/2,0.0,0.0],prefix,nbJoints)
     else:
       moveJoint ([0.0,2.9,0.0,1.3,4.2,1.4,0.0],prefix,nbJoints)
 
