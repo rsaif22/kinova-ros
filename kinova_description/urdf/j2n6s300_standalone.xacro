@@ -19,9 +19,9 @@
 
   <xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro"/>
 
-  <xacro:property name="circle1_radius" value="0.85"/>
-  <xacro:property name="circle2_radius" value="0.575"/>
-  <xacro:property name="circle3_radius" value="0.3"/>
+  <xacro:property name="circle1_radius" value="0.75"/>
+  <xacro:property name="circle2_radius" value="0.475"/>
+  <xacro:property name="circle3_radius" value="0.2"/>
   <xacro:property name="height" value="0.001"/>
   <xacro:property name="line_width" value="0.01"/>
   <xacro:property name="pi" value="3.14159265359"/>
