@@ -775,10 +775,10 @@ void KinovaArm::publishJoystickValue(void)
 void KinovaArm::statusTimer(const ros::TimerEvent&)
 {
     publishJointAngles();
-    publishToolPosition();
-    publishToolWrench();
-    publishFingerPosition();
-    publishJoystickValue();
+    //publishToolPosition();
+    //publishToolWrench();
+    //publishFingerPosition();
+    //publishJoystickValue();
 }
 
 }  // namespace kinova

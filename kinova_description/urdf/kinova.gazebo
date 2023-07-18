@@ -11,6 +11,11 @@
         <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
         <legacyModeNS>true</legacyModeNS>
       </plugin>
+      <!-- <plugin name="kinova_ros_control" filename="libkinova_ros_control.so">
+        <robotNamespace>${robot_namespace}</robotNamespace>
+        <robotSimType>kinova_ros_control/DefaultRobotHWSim</robotSimType>
+        <legacyModeNS>true</legacyModeNS>
+      </plugin> -->
     </gazebo>
 
 </xacro:macro>

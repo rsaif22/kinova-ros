@@ -144,5 +144,10 @@
     <disable_collisions link1="passive_ee_0_link" link2="passive_ee_1_link" reason="Allowed" />
     <disable_collisions link1="passive_ee_1_link" link2="passive_ee_2_link" reason="Allowed" />
     <disable_collisions link1="passive_ee_0_link" link2="passive_ee_2_link" reason="Allowed" />
+    <disable_collisions link1="middle_link_1_link" link2="passive_ee_2_link" reason="Allowed" />
+    <disable_collisions link1="middle_link_2_link" link2="passive_ee_2_link" reason="Allowed" />
+    <disable_collisions link1="middle_link_1_link" link2="passive_ee_1_link" reason="Allowed" />
+    <disable_collisions link1="middle_link_2_link" link2="passive_ee_1_link" reason="Allowed" />
+    <disable_collisions link1="passive_ee_mass_link" link2="passive_ee_2_link" reason="Allowed" />
 
 </robot>

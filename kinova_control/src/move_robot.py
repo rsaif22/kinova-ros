@@ -5,6 +5,8 @@ import rospy
 from trajectory_msgs.msg import JointTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint
 from std_srvs.srv import Empty
+from gazebo_msgs.srv import SetPhysicsProperties, GetPhysicsProperties
+from geometry_msgs.msg import Vector3
 import argparse
 import time
 import numpy as np
@@ -64,6 +66,46 @@ def moveFingers (jointcmds,prefix,nbJoints):
     count = count + 1
     rate.sleep()     
 
+def disable_gravity():
+
+    # Disable gravity
+    set_physics_properties = rospy.ServiceProxy('/gazebo/set_physics_properties', SetPhysicsProperties)
+    get_physics_properties = rospy.ServiceProxy('/gazebo/get_physics_properties', GetPhysicsProperties)
+
+    # Get the current physics properties
+    physics_properties = get_physics_properties()
+
+    # Store the original gravity value
+    original_gravity = physics_properties.gravity
+
+    # Set gravity to 0
+    zero_gravity = Vector3()
+    print(f"Gravity is {zero_gravity}")
+    physics_properties.gravity = zero_gravity
+    #print(f"TIME STEP IS {physics_properties.time_step}")
+    print(f"MAX UPDATE RATE IS {physics_properties.max_update_rate}")
+
+    # Call the service to disable gravity
+    set_physics_properties(physics_properties.time_step, physics_properties.max_update_rate,
+                           physics_properties.gravity, physics_properties.ode_config)
+    
+    rospy.wait_for_service('/gazebo/unpause_physics')
+    unpause_gazebo = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
+    resp = unpause_gazebo()
+
+    # Wait for the controllers to start
+    rospy.wait_for_service('/j2n6s300/controller_manager/load_controller')  # Replace with your controller service
+    rospy.sleep(3)
+    # Enable gravity again
+    for i in range(10):
+      physics_properties.gravity.z = physics_properties.gravity.z + original_gravity.z/10
+      print(f"Gravity is {physics_properties.gravity}")
+
+    # Call the service to enable gravity
+      set_physics_properties(physics_properties.time_step, physics_properties.max_update_rate,
+                           physics_properties.gravity, physics_properties.ode_config)
+      rospy.sleep(0.1)
+
 if __name__ == '__main__':
   try:    
     rospy.init_node('move_robot_using_trajectory_msg')		
@@ -72,17 +114,17 @@ if __name__ == '__main__':
     time.sleep(5)
 
     # Unpause the physics
-    rospy.wait_for_service('/gazebo/unpause_physics')
-    unpause_gazebo = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
-    resp = unpause_gazebo()
+    # Wait for the controller services to become available
+    disable_gravity()
 
 
-    if (nbJoints==6):
-      #home robots
-      moveJoint ([np.pi/6,np.pi,np.pi/2,np.pi/2,0.0,0.0],prefix,nbJoints)
-    else:
-      moveJoint ([0.0,2.9,0.0,1.3,4.2,1.4,0.0],prefix,nbJoints)
 
-    moveFingers ([1,1,1],prefix,nbfingers)
+    # if (nbJoints==6):
+    #   #home robots
+    #   moveJoint ([0,np.pi/2,np.pi,np.pi/2,0.0,0.0],prefix,nbJoints)
+    # else:
+    #   moveJoint ([0.0,2.9,0.0,1.3,4.2,1.4,0.0],prefix,nbJoints)
+
+    #moveFingers ([1,1,1],prefix,nbfingers)
   except rospy.ROSInterruptException:
     print("program interrupted before completion")

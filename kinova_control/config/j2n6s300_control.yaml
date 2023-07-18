@@ -1,4 +1,53 @@
 j2n6s300:
+  # Velocity Trajectory Controllers ------------------------------------
+  velocity_joint_trajectory_controller:
+    type: "velocity_controllers/JointTrajectoryController"
+    controller_frequency: 200
+    joints:      
+      - j2n6s300_joint_1
+      - j2n6s300_joint_2
+      - j2n6s300_joint_3
+      - j2n6s300_joint_4
+      - j2n6s300_joint_5
+      - j2n6s300_joint_6
+
+    constraints:
+      goal_time: 0.0                # Defaults to zero
+      stopped_velocity_tolerance: 0.001 # Defaults to 0.01     
+      j2n6s300_joint_1:
+        trajectory: 0.00001
+        goal: 0.2       
+      j2n6s300_joint_2:
+        trajectory: 0.00001 
+        goal: 0.2       
+      j2n6s300_joint_3:
+        trajectory: 0.00001
+        goal: 0.2       
+      j2n6s300_joint_4:
+        trajectory: 0 
+        goal: 0.2       
+      j2n6s300_joint_5:
+        trajectory: 0 
+        goal: 0.2       
+      j2n6s300_joint_6:
+        trajectory: 0 
+        goal: 0.2  
+    open_loop_control: true     
+
+    gains:
+      j2n6s300_joint_1: {p: 0.0,  i: 0.005, d: 0.01, i_clamp: 20}
+      j2n6s300_joint_2: {p: 0.0,  i: 0.005, d: 0.01, i_clamp: 20}
+      j2n6s300_joint_3: {p: 0.0,  i: 0.005, d: 0.01, i_clamp: 20}
+      j2n6s300_joint_4: {p: 1000.0,  i: 0.1, d: 2.0, i_clamp: 1}
+      j2n6s300_joint_5: {p: 1000.0,  i: 0.1, d: 2.0, i_clamp: 1}
+      j2n6s300_joint_6: {p: 1000.0,  i: 0.1, d: 2.0, i_clamp: 1}
+
+    state_publish_rate:  200 # Defaults to 50
+    action_monitor_rate: 20 # Defaults to 20
+    hold_trajectory_duration: 0 # Defaults to 0.5   
+    interpolation_method: "linear" # Defaults to "linear"
+
+
   effort_finger_trajectory_controller:
     constraints:
       goal_time: 1.0
@@ -35,16 +84,16 @@ j2n6s300:
     type: effort_controllers/JointTrajectoryController
   effort_joint_trajectory_controller:
     constraints:
-      goal_time: 1.0
+      goal_time: 0.01
       j2n6s300_joint_1:
-        goal: 0.02
-        trajectory: 0.05
+        goal: 0.01
+        trajectory: 0.00001
       j2n6s300_joint_2:
         goal: 0.02
-        trajectory: 0.05
+        trajectory: 0.00001
       j2n6s300_joint_3:
         goal: 0.02
-        trajectory: 0.05
+        trajectory: 0.00001
       j2n6s300_joint_4:
         goal: 0.02
         trajectory: 0.05
@@ -56,21 +105,22 @@ j2n6s300:
         trajectory: 0.05
       stopped_velocity_tolerance: 0.02
     gains:
-      j2n6s300_joint_1:
+      j2n6s300_joint_1: 
         d: 0
         i: 0
         i_clamp: 10
-        p: 5000
+        p: 0
+        
       j2n6s300_joint_2:
         d: 0
         i: 0
         i_clamp: 10
-        p: 5000
+        p: 0
       j2n6s300_joint_3:
-        d: 0
+        d: 0.05
         i: 0
         i_clamp: 10
-        p: 5000
+        p: 0
       j2n6s300_joint_4:
         d: 0
         i: 0
@@ -178,6 +228,28 @@ j2n6s300:
       i: 0
       p: 500
     type: effort_controllers/JointPositionController
+
+  joint_1_velocity_controller:
+    joint: j2n6s300_joint_1
+    pid:
+      d: 0
+      i: 0
+      p: 0
+    type: effort_controllers/JointVelocityController
+  joint_2_velocity_controller:
+    joint: j2n6s300_joint_2
+    pid:
+      d: 0
+      i: 0
+      p: 0
+    type: effort_controllers/JointVelocityController
+  joint_3_velocity_controller:
+    joint: j2n6s300_joint_3
+    pid:
+      d: 0
+      i: 0
+      p: 20000
+    type: effort_controllers/JointVelocityController
   joint_state_controller:
-    publish_rate: 50
+    publish_rate: 200
     type: joint_state_controller/JointStateController

@@ -20,14 +20,31 @@
   <xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro"/>
   
 
-  <xacro:property name="circle1_radius" value="0.85"/>
-  <xacro:property name="circle2_radius" value="0.575"/>
-  <xacro:property name="circle3_radius" value="0.3"/>
-  <xacro:property name="height" value="0.001"/>
-  <xacro:property name="line_width" value="0.01"/>
-  <xacro:property name="pi" value="3.14159265359"/>
+  <!-- Define the link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.5"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.1 0.1 0.5"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.00416667" ixy="0" ixz="0" iyy="0.00416667" iyz="0" izz="0.00416667"/>
+    </inertial>
+  </link>
 
-  
+  <!-- Define the joint -->
+  <joint name="fixed_joint" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.25"/>
+  </joint>
 
   <!-- for gazebo -->
   <link name="world"/>
@@ -36,8 +53,8 @@
 
   <joint name="connect_root_and_world" type="fixed">
     <child link="root" />
-    <parent link="world" />
-    <origin xyz="0 0 0" rpy="0 0 0" />    
+    <parent link="base_link" />
+    <origin xyz="0 0 0.25" rpy="0 0 0" />    
   </joint> 
 
 
@@ -48,5 +65,10 @@
 
   <xacro:passive_ee base_parent="j2n6s300_link_6"/>
 
-
+    <!-- Add the plugin to the robot -->
+  <gazebo>
+    <plugin name="fast_joints_plugin" filename="libfast_joints_plugin.so">
+      <!-- Plugin parameters, if any -->
+    </plugin>
+  </gazebo>
 </robot>

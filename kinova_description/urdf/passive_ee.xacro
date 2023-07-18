@@ -21,7 +21,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="${mass}" />
+        <mass value="5e-04" />
         <origin xyz="${xyz}" rpy="${rpy}" />
         <inertia 
           ixx="${(1.0/12.0) * mass * (width * width + height * height)}" 
@@ -40,7 +40,7 @@
         <xacro:if value="${joint_type == 'revolute'}">
             <axis xyz="${joint_revolute_axis}" />
             <limit effort="100" velocity="5" lower="${-2*pi}" upper="${2*pi}"/>
-            <dynamics damping="0.4"/>
+            <dynamics damping="0.004"/>
         </xacro:if>
     </joint>
     <!--Define transmission if revolute (needed for TF to be published)-->
@@ -100,8 +100,8 @@
     <xacro:property name="passive_ee_0_name" value="passive_ee_0" />
     <xacro:property name="passive_ee_0_length" value="0.02" />
     <xacro:property name="passive_ee_0_width" value="0.02" />
-    <xacro:property name="passive_ee_0_height" value="0.1" />
-    <xacro:property name="passive_ee_0_mass" value="0.1" />
+    <xacro:property name="passive_ee_0_height" value="0.15" />
+    <xacro:property name="passive_ee_0_mass" value="1e-03" />
     <xacro:property name="passive_ee_0_color" value="0.0 0.0 1.0 1.0" />
     <xacro:property name="passive_ee_0_xyz" value="0.0 0.0 ${-passive_ee_0_height/2}" />
     <xacro:property name="passive_ee_0_rpy" value="0.0 0.0 0.0" />
@@ -114,7 +114,7 @@
   <xacro:property name="passive_ee_1_length" value="0.02" />
   <xacro:property name="passive_ee_1_width" value="0.02" />
   <xacro:property name="passive_ee_1_height" value="0.1" />
-  <xacro:property name="passive_ee_1_mass" value="0.1" />
+  <xacro:property name="passive_ee_1_mass" value="1e-03" />
   <xacro:property name="passive_ee_1_color" value="0.0 1.0 0.0 1.0" />
   <xacro:property name="passive_ee_1_xyz" value="0.0 0.0 ${-passive_ee_1_height/2}" />
     <xacro:property name="passive_ee_1_rpy" value="0.0 0.0 0.0" />
@@ -131,7 +131,7 @@
   <xacro:property name="middle_link_1_length" value="0.02" />
   <xacro:property name="middle_link_1_width" value="0.005" />
   <xacro:property name="middle_link_1_height" value="0.04" />
-  <xacro:property name="middle_link_1_mass" value="0.001" />
+  <xacro:property name="middle_link_1_mass" value="1e-03" />
   <xacro:property name="middle_link_1_color" value="0.0 0.0 0.0 1.0" />
   <xacro:property name="middle_link_1_xyz" value="0.0 0.0 ${-middle_link_1_height/2}" />
   <xacro:property name="middle_link_1_rpy" value="0.0 0.0 0.0" />
@@ -146,7 +146,7 @@
   <xacro:property name="middle_link_2_length" value="0.02" />
   <xacro:property name="middle_link_2_width" value="0.005" />
   <xacro:property name="middle_link_2_height" value="0.04" />
-  <xacro:property name="middle_link_2_mass" value="0.001" />
+  <xacro:property name="middle_link_2_mass" value="1e-03" />
   <xacro:property name="middle_link_2_color" value="0.0 0.0 0.0 1.0" />
   <xacro:property name="middle_link_2_xyz" value="0.0 0.0 ${-middle_link_2_height/2}" />
   <xacro:property name="middle_link_2_rpy" value="0.0 0.0 0.0" />
@@ -160,7 +160,7 @@
   <xacro:property name="passive_ee_2_length" value="0.02" />
   <xacro:property name="passive_ee_2_width" value="0.02" />
   <xacro:property name="passive_ee_2_height" value="0.2" />
-  <xacro:property name="passive_ee_2_mass" value="0.2" />
+  <xacro:property name="passive_ee_2_mass" value="1e-03" />
   <xacro:property name="passive_ee_2_color" value="1.0 0.0 0.0 1.0" />
   <xacro:property name="passive_ee_2_xyz" value="0.0 0.0 ${-passive_ee_2_height/2}" />
     <xacro:property name="passive_ee_2_rpy" value="0.0 0.0 0.0" />

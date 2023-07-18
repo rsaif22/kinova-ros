@@ -13,6 +13,9 @@
   <arg name="rqt" default="false"/>
   <arg name="has2finger" default="false"/>
   <arg name="description_name" default="robot_description"/> <!-- allows remapping of robot_description into a namespace -->
+  <arg name="pi" default="3.14159265358979"/>
+  <arg name="joint_2" default="1.39626340159546"/>
+  <arg name="joint_3" default="2.61799387799149"/>
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -35,15 +38,16 @@
     <node unless="$(arg has2finger)" name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
       args="-urdf -model $(arg kinova_robotName) -param robot_description
           -J $(arg kinova_robotType)_joint_1 0.0
-          -J $(arg kinova_robotType)_joint_2 2.39
-          -J $(arg kinova_robotType)_joint_3 0.57
+          -J $(arg kinova_robotType)_joint_2 $(arg joint_2)
+          -J $(arg kinova_robotType)_joint_3 $(arg joint_3)
           -J $(arg kinova_robotType)_joint_4 1.57
           -J $(arg kinova_robotType)_joint_5 0.0
           -J $(arg kinova_robotType)_joint_6 0.0
           -J $(arg kinova_robotType)_joint_finger_1 1.0
           -J $(arg kinova_robotType)_joint_finger_2 1.0
           -J $(arg kinova_robotType)_joint_finger_3 1.0
-          -J passive_ee_1_joint 1.2"/>
+          -J passive_ee_1_joint 4.363
+          "/>
     <!-- For 2 fingers -->
     <node if="$(arg has2finger)" name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
       args="-urdf -model $(arg kinova_robotName) -param robot_description
@@ -100,5 +104,6 @@
   <include if="$(arg rqt)" file="$(find kinova_control)/launch/kinova_rqt.launch">
     <arg name="kinova_robotType" value="$(arg kinova_robotType)"/>
   </include> 
+  <param name="j2n6s300/j2n6s300_joints_controller/joint_state_publish_rate" value="250.0" />
 </launch>
 

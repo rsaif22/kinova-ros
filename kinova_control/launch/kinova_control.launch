@@ -8,6 +8,7 @@
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
   <rosparam file="$(find kinova_control)/config/$(arg kinova_robotName)_control.yaml" command="load"/>
+
  
   <group unless="$(arg use_trajectory_controller)">
     <group unless="$(arg is7dof)">
@@ -73,11 +74,12 @@
   </group>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
-  <node name="$(arg kinova_robotName)_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+  <!-- <node name="$(arg kinova_robotName)_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
         respawn="true" output="screen">
     <remap from="/joint_states" to="/$(arg kinova_robotName)/joint_states"/>
     <remap from="robot_description" to="$(arg description_name)"/>
-  </node>
+    <param name="publish_frequency" value="200.0"/>
+  </node> -->
   
   <node name="command_robot_home_pose" pkg="kinova_control" type="move_robot.py"
         respawn="false" output="screen" args="$(arg kinova_robotType)">       
