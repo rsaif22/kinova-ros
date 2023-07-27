@@ -41,6 +41,7 @@
 #include <kinova_msgs/ZeroTorques.h>
 #include <kinova_msgs/RunCOMParametersEstimation.h>
 #include <kinova_msgs/CartesianForce.h>
+#include <kinova_msgs/JoystickCommand.h>
 
 #include <time.h>
 #include <math.h>
@@ -118,6 +119,7 @@ class KinovaArm
     void publishToolWrench(void);
     void publishFingerPosition(void);
     void publishJoystickValue(void);
+    void publishJoystick(void);
 
     tf::TransformListener tf_listener_;
     ros::NodeHandle node_handle_;
@@ -138,6 +140,7 @@ class KinovaArm
     ros::Publisher finger_position_publisher_;
     ros::Publisher joint_state_publisher_;
     ros::Publisher joystick_publisher_;
+    ros::Publisher joystick_state_publisher_;
 
     ros::Publisher joint_command_publisher_;
     ros::Publisher cartesian_command_publisher_;

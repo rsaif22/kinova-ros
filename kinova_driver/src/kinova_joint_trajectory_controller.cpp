@@ -54,6 +54,7 @@ JointTrajectoryController::JointTrajectoryController(kinova::KinovaComm &kinova_
     traj_command_points_index_ = 0;
 
     //ROS_DEBUG_STREAM_ONCE("Get out: " << __PRETTY_FUNCTION__);
+    stop_ = false;
 }
 
 JointTrajectoryController::~JointTrajectoryController()
@@ -99,6 +100,12 @@ void JointTrajectoryController::commandCB(const trajectory_msgs::JointTrajectory
 //    }
 
     traj_command_points_ = traj_msg->points;
+
+    if (traj_command_points_.size() == 0) {
+        stop_ = true;
+        return;
+    }
+
     ROS_INFO_STREAM("Trajectory controller Receive trajectory with points number: " << traj_command_points_.size());
 
     // Map the index in joint_names and the msg
@@ -198,6 +205,24 @@ void JointTrajectoryController::pub_joint_vel(const ros::TimerEvent&)
     // send out each velocity command with corresponding duration delay.
 
     kinova_msgs::JointVelocity joint_velocity_msg;
+
+    if (stop_) 
+    {
+        joint_velocity_msg.joint1 = 0;
+        joint_velocity_msg.joint2 = 0;
+        joint_velocity_msg.joint3 = 0;
+        joint_velocity_msg.joint4 = 0;
+        joint_velocity_msg.joint5 = 0;
+        joint_velocity_msg.joint6 = 0;
+        joint_velocity_msg.joint7 = 0;
+
+        traj_command_points_.clear();
+
+        traj_command_points_index_ = 0;
+        timer_pub_joint_vel_.stop();
+        stop_ = false;
+        return;
+    }
 
     if (traj_command_points_index_ <  kinova_angle_command_.size() && ros::ok())
     {

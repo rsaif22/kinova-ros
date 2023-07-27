@@ -23,6 +23,7 @@ add_message_files(
   PoseVelocityWithFingers.msg
   PoseVelocityWithFingerVelocity.msg
   CartesianForce.msg
+  JoystickCommand.msg
 )
 
 add_service_files(
@@ -53,9 +54,10 @@ generate_messages(
   DEPENDENCIES
   actionlib_msgs
   geometry_msgs
+  std_msgs
 )
 
 catkin_package(
-  CATKIN_DEPENDS actionlib_msgs geometry_msgs message_runtime
+  CATKIN_DEPENDS actionlib_msgs geometry_msgs message_runtime std_msgs
 )
 

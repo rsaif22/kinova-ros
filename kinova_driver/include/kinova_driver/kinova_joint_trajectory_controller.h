@@ -26,6 +26,8 @@ public:
 private:
     ros::NodeHandle nh_;
 
+    bool stop_;
+
     ros::Subscriber sub_command_;
     ros::Publisher pub_joint_feedback_;
     ros::Publisher pub_joint_velocity_;

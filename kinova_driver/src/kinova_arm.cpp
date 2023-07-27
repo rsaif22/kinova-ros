@@ -8,6 +8,7 @@
 
 #include "kinova_driver/kinova_arm.h"
 #include <string>
+#include <algorithm>
 #include <boost/lexical_cast.hpp>
 #include <kinova_driver/kinova_ros_types.h>
 
@@ -204,6 +205,8 @@ KinovaArm::KinovaArm(KinovaComm &arm, const ros::NodeHandle &nodeHandle, const s
             ("out/finger_position", 2);
     joystick_publisher_ = node_handle_.advertise<geometry_msgs::Vector3>
             ("out/joystick_command", 2);
+    joystick_state_publisher_ = node_handle_.advertise<kinova_msgs::JoystickCommand>
+            ("out/joystick_state", 2);
 
     // Publish last command for relative motion (read current position cause arm drop)
     joint_command_publisher_ = node_handle_.advertise<kinova_msgs::JointAngles>("out/joint_command", 2);
@@ -772,6 +775,25 @@ void KinovaArm::publishJoystickValue(void)
     joystick_publisher_.publish(msg);
 }
 
+void KinovaArm::publishJoystick(void)
+{
+    JoystickCommand joystick_command;
+    kinova_comm_.getJoystickValue(joystick_command);
+    kinova_msgs::JoystickCommand msg;
+    //msg.button_value = joystick_command.ButtonValue;
+    //std::copy(joystick_command.ButtonValue, joystick_command.ButtonValue + button_array_size, msg.button_value);
+    constexpr int button_array_size{ 16 };
+    for (int i{ 0 }; i < button_array_size; ++i) {
+        msg.button_value[i] = joystick_command.ButtonValue[i];
+    }
+    msg.incline_forward_backward = joystick_command.InclineForwardBackward;
+    msg.incline_left_right = joystick_command.InclineLeftRight;
+    msg.move_forward_backward = joystick_command.MoveForwardBackward;
+    msg.move_left_right = joystick_command.MoveLeftRight;
+    msg.push_pull = joystick_command.PushPull;
+    msg.rotate = joystick_command.Rotate;
+    joystick_state_publisher_.publish(msg);
+}
 void KinovaArm::statusTimer(const ros::TimerEvent&)
 {
     publishJointAngles();
@@ -779,6 +801,7 @@ void KinovaArm::statusTimer(const ros::TimerEvent&)
     publishToolWrench();
     publishFingerPosition();
     publishJoystickValue();
+    publishJoystick();
 }
 
 }  // namespace kinova

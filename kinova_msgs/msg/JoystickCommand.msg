@@ -1,0 +1,7 @@
+int16[16] button_value
+float32 incline_forward_backward
+float32 incline_left_right
+float32 move_forward_backward
+float32 move_left_right
+float32 push_pull
+float32 rotate
